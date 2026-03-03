@@ -1,0 +1,35 @@
+function analyzeSafeReport(report){
+    const reportLevels = report.trim().split(' ').map(Number);
+    // 1. Check levels should be atlest 2 to make comparison
+    if(reportLevels.length < 2){
+        return false;
+    }
+    let direction = '';
+    for(let i = 1; i < reportLevels.length; i++){
+        //2. Check levels difference should be 1,2 or 3
+        let difference = reportLevels[i] - reportLevels[i-1];
+        if (Math.abs(difference) < 1 || Math.abs(difference) > 3){
+            return false;
+        }
+        // 3. Check the direction of levels
+        
+        if(direction == ''){
+           direction = (reportLevels[i] > reportLevels[i-1])?"increase" : "decrease"; // decide the direction for first time
+        }else{
+            if(direction == 'increase' && (reportLevels[i] < reportLevels[i-1])) return false; // condition to check if direction is already incresing but current value decresing
+             if(direction == 'decrease' && (reportLevels[i] > reportLevels[i-1])) return false;
+        } 
+    }
+    return true;
+}
+// Function to check safe reports in provided input
+function safeReportsCount(input){
+    const reports = input.trim().split('\n');
+    let safeCounter = 0;
+    for (const report of reports){       
+        if(analyzeSafeReport(report)){
+            safeCounter ++;
+        }
+    }
+    return "The number of safe reports in this input :"+safeCounter;
+}
